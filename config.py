@@ -26,3 +26,18 @@ class Config:
     BASE_URL = os.environ.get("BASE_URL", "http://localhost:5000")
 
     ITEMS_PER_PAGE = 12
+
+    # ── Segurança de sessão ────────────────────────────────────────────────
+    SESSION_COOKIE_HTTPONLY = True
+    SESSION_COOKIE_SAMESITE = "Lax"
+    REMEMBER_COOKIE_HTTPONLY = True
+    REMEMBER_COOKIE_DURATION = 604800  # 7 dias
+    WTF_CSRF_TIME_LIMIT = 3600         # CSRF token expira em 1h
+
+    # SESSION_COOKIE_SECURE deve ser True em produção (HTTPS).
+    # Controlado via env para não quebrar desenvolvimento HTTP.
+    SESSION_COOKIE_SECURE = os.environ.get("FLASK_ENV") == "production"
+
+    # ── Rate limiting ──────────────────────────────────────────────────────
+    RATELIMIT_HEADERS_ENABLED = True
+    RATELIMIT_DEFAULT = ["300 per day", "100 per hour"]

@@ -1,7 +1,7 @@
 import os
-from flask import Flask
+from flask import Flask, render_template
 from config import Config
-from core.extensions import db, login_manager, migrate, csrf
+from core.extensions import db, login_manager, migrate, csrf, limiter
 
 
 def create_app(config_class=Config):
@@ -12,17 +12,65 @@ def create_app(config_class=Config):
     os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
     os.makedirs(os.path.join(app.root_path, "instance"), exist_ok=True)
 
-    # Extensões
+    # ── Extensões base ─────────────────────────────────────────────────────
     db.init_app(app)
     login_manager.init_app(app)
     migrate.init_app(app, db)
     csrf.init_app(app)
+    limiter.init_app(app)
 
     login_manager.login_view = "auth.login"
     login_manager.login_message = "Faça login para continuar."
     login_manager.login_message_category = "warning"
 
-    # Blueprints
+    # ── Flask-Talisman (headers de segurança HTTP) ─────────────────────────
+    from flask_talisman import Talisman
+    is_prod = os.environ.get("FLASK_ENV") == "production"
+
+    _csp = {
+        "default-src": "'self'",
+        "script-src": [
+            "'self'",
+            "'unsafe-inline'",          # necessário para snippets inline do MP
+            "https://sdk.mercadopago.com",
+        ],
+        "style-src": [
+            "'self'",
+            "'unsafe-inline'",
+            "https://fonts.googleapis.com",
+            "https://cdn.jsdelivr.net",
+        ],
+        "font-src": [
+            "'self'",
+            "https://fonts.gstatic.com",
+            "https://cdn.jsdelivr.net",
+        ],
+        "img-src": ["'self'", "data:", "https:"],
+        "connect-src": ["'self'", "https://api.mercadopago.com"],
+        "frame-src": [
+            "'self'",
+            "https://www.mercadopago.com",
+            "https://www.mercadopago.com.br",
+        ],
+        "object-src": "'none'",
+        "base-uri": "'self'",
+        "form-action": "'self'",
+    }
+
+    Talisman(
+        app,
+        force_https=is_prod,
+        strict_transport_security=is_prod,
+        strict_transport_security_max_age=31536000,
+        content_security_policy=_csp,
+        session_cookie_secure=is_prod,
+        session_cookie_http_only=True,
+        x_content_type_options=True,
+        frame_options="DENY",
+        referrer_policy="strict-origin-when-cross-origin",
+    )
+
+    # ── Blueprints ─────────────────────────────────────────────────────────
     from routes.main import main_bp
     from routes.auth import auth_bp
     from routes.admin import admin_bp
@@ -35,7 +83,28 @@ def create_app(config_class=Config):
     app.register_blueprint(cart_bp, url_prefix="/carrinho")
     app.register_blueprint(payment_bp, url_prefix="/pagamento")
 
-    # Cria tabelas no primeiro uso
+    # ── Handlers de erro ───────────────────────────────────────────────────
+    @app.errorhandler(400)
+    def bad_request(e):
+        return render_template("errors/400.html"), 400
+
+    @app.errorhandler(403)
+    def forbidden(e):
+        return render_template("errors/403.html"), 403
+
+    @app.errorhandler(404)
+    def not_found(e):
+        return render_template("errors/404.html"), 404
+
+    @app.errorhandler(429)
+    def too_many_requests(e):
+        return render_template("errors/429.html"), 429
+
+    @app.errorhandler(500)
+    def server_error(e):
+        return render_template("errors/500.html"), 500
+
+    # ── Cria tabelas no primeiro uso ───────────────────────────────────────
     with app.app_context():
         db.create_all()
         _seed_admin()

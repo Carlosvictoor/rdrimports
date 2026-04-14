@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request, abort
 from models.product import Product
 from models.category import Category
 from sqlalchemy import or_
+from core.security import sanitize_search
 
 main_bp = Blueprint("main", __name__)
 
@@ -17,7 +18,7 @@ def index():
 def catalog():
     from flask import current_app
     page = request.args.get("page", 1, type=int)
-    q = request.args.get("q", "").strip()
+    q = sanitize_search(request.args.get("q", ""))
     category_slug = request.args.get("categoria", "")
     min_price = request.args.get("min_price", type=float)
     max_price = request.args.get("max_price", type=float)

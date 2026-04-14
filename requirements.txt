@@ -10,3 +10,6 @@ mercadopago==2.2.2
 WTForms==3.1.2
 SQLAlchemy==2.0.31
 email-validator==2.2.0
+flask-limiter==4.1.1
+flask-talisman==1.1.0
+bleach==6.3.0

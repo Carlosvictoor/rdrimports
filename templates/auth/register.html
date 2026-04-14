@@ -8,6 +8,10 @@
     <h2>Criar conta</h2>
     <form method="post" action="{{ url_for('auth.register') }}">
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+      {# Honeypot — invisível para humanos, bots preenchem e são bloqueados #}
+      <div style="display:none;visibility:hidden;position:absolute;left:-9999px;" aria-hidden="true">
+        <input type="text" name="website" tabindex="-1" autocomplete="off" />
+      </div>
       <div class="form-group">
         <label>Nome completo *</label>
         <input type="text" name="name" required />

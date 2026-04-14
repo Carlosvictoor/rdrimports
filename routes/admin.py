@@ -1,9 +1,11 @@
 import os
+import logging
 from functools import wraps
 from flask import Blueprint, render_template, redirect, url_for, flash, request, current_app
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
-from core.extensions import db
+from core.extensions import db, limiter
+from core.security import sanitize_text
 from models.category import Category
 from models.product import Product
 from models.order import Order
@@ -13,14 +15,23 @@ admin_bp = Blueprint("admin", __name__)
 
 ALLOWED = {"png", "jpg", "jpeg", "webp"}
 
+_logger = logging.getLogger("rdrimports.admin")
+
 
 def admin_required(f):
     @wraps(f)
     @login_required
+    @limiter.limit("200 per hour")
     def decorated(*args, **kwargs):
         if not current_user.is_admin:
-            flash("Acesso restrito.", "danger")
-            return redirect(url_for("main.index"))
+            _logger.warning(
+                "Acesso negado ao admin — usuário: %s IP: %s",
+                getattr(current_user, "email", "anônimo"),
+                request.remote_addr,
+            )
+            # Retorna 404 para não revelar que o painel existe
+            from flask import abort
+            abort(404)
         return f(*args, **kwargs)
     return decorated
 
