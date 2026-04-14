@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}Loja — RDR Imports{% endblock %}
+
+{% block content %}
+<div class="container catalog-layout">
+
+  <!-- Sidebar filtros -->
+  <aside class="catalog-sidebar">
+    <h3>Filtros</h3>
+    <form method="get" action="{{ url_for('main.catalog') }}" id="filterForm">
+      <input type="hidden" name="q" value="{{ q }}" />
+
+      <div class="filter-group">
+        <label>Categoria</label>
+        <ul>
+          <li><a href="{{ url_for('main.catalog', q=q) }}" class="{% if not active_category %}active{% endif %}">Todas</a></li>
+          {% for cat in categories %}
+          <li>
+            <a href="{{ url_for('main.catalog', q=q, categoria=cat.slug) }}"
+               class="{% if active_category == cat.slug %}active{% endif %}">
+              {{ cat.name }}
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <div class="filter-group">
+        <label>Faixa de preço</label>
+        <div class="price-range">
+          <input type="number" name="min_price" placeholder="Mín" step="0.01"
+                 value="{{ request.args.get('min_price', '') }}" />
+          <span>—</span>
+          <input type="number" name="max_price" placeholder="Máx" step="0.01"
+                 value="{{ request.args.get('max_price', '') }}" />
+        </div>
+        <button type="submit" class="btn btn-gold btn-sm btn-full">Filtrar</button>
+      </div>
+    </form>
+  </aside>
+
+  <!-- Produtos -->
+  <div class="catalog-main">
+    <div class="catalog-top">
+      <h2>
+        {% if q %}Resultados para "{{ q }}"{% else %}Todos os Produtos{% endif %}
+        <span>({{ products.total }})</span>
+      </h2>
+    </div>
+
+    {% if products.items %}
+      <div class="products-grid">
+        {% for product in products.items %}
+          {% include "shop/_product_card.html" %}
+        {% endfor %}
+      </div>
+
+      <!-- Paginação -->
+      {% if products.pages > 1 %}
+      <div class="pagination">
+        {% if products.has_prev %}
+          <a href="{{ url_for('main.catalog', page=products.prev_num, q=q, categoria=active_category) }}" class="page-btn">&laquo;</a>
+        {% endif %}
+        {% for p in products.iter_pages() %}
+          {% if p %}
+            <a href="{{ url_for('main.catalog', page=p, q=q, categoria=active_category) }}"
+               class="page-btn {% if p == products.page %}active{% endif %}">{{ p }}</a>
+          {% else %}
+            <span class="page-dots">…</span>
+          {% endif %}
+        {% endfor %}
+        {% if products.has_next %}
+          <a href="{{ url_for('main.catalog', page=products.next_num, q=q, categoria=active_category) }}" class="page-btn">&raquo;</a>
+        {% endif %}
+      </div>
+      {% endif %}
+
+    {% else %}
+      <div class="empty-state">
+        <i class="bi bi-search"></i>
+        <p>Nenhum produto encontrado.</p>
+        <a href="{{ url_for('main.catalog') }}" class="btn btn-outline-gold">Ver todos</a>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

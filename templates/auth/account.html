@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Minha Conta — RDR Imports{% endblock %}
+
+{% block content %}
+<div class="container account-page">
+  <h1>Minha Conta</h1>
+  <div class="account-grid">
+    <div class="account-info">
+      <h3><i class="bi bi-person-circle"></i> Dados</h3>
+      <p><strong>Nome:</strong> {{ current_user.name }}</p>
+      <p><strong>E-mail:</strong> {{ current_user.email }}</p>
+      {% if current_user.phone %}<p><strong>Telefone:</strong> {{ current_user.phone }}</p>{% endif %}
+      <p><strong>Membro desde:</strong> {{ current_user.created_at.strftime('%d/%m/%Y') }}</p>
+    </div>
+    <div class="account-orders">
+      <h3><i class="bi bi-bag-check"></i> Meus Pedidos</h3>
+      {% if current_user.orders %}
+        <table class="table">
+          <thead>
+            <tr><th>Pedido</th><th>Data</th><th>Total</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+          {% for order in current_user.orders|sort(attribute='created_at', reverse=True) %}
+            <tr>
+              <td>#{{ order.id }}</td>
+              <td>{{ order.created_at.strftime('%d/%m/%Y') }}</td>
+              <td>R$ {{ "%.2f"|format(order.total)|replace(".", ",") }}</td>
+              <td><span class="status-badge {{ order.status_label[1] }}">{{ order.status_label[0] }}</span></td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <p>Nenhum pedido realizado ainda.</p>
+        <a href="{{ url_for('main.catalog') }}" class="btn btn-gold">Fazer primeiro pedido</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

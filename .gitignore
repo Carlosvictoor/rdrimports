@@ -1,0 +1,39 @@
+# Ambiente virtual
+venv/
+.venv/
+env/
+
+# Variáveis de ambiente — NUNCA subir para o GitHub!
+.env
+
+# Banco de dados local
+instance/
+*.db
+*.sqlite3
+
+# Cache Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+
+# Uploads de usuários
+static/uploads/
+
+# Logs
+*.log
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Flask-Migrate (manter apenas migrations/versions se existir)
+# Descomente se não quiser versionar as migrations:
+# migrations/

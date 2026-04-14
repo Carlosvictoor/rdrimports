@@ -1,0 +1,39 @@
+{% extends "admin/base.html" %}
+{% block title %}Pedidos{% endblock %}
+{% block page_title %}Pedidos{% endblock %}
+
+{% block content %}
+<div class="admin-section-header">
+  <div class="status-filter-tabs">
+    <a href="{{ url_for('admin.orders') }}" class="{% if not status_filter %}active{% endif %}">Todos</a>
+    <a href="{{ url_for('admin.orders', status='pendente') }}" class="{% if status_filter=='pendente' %}active{% endif %}">Pendentes</a>
+    <a href="{{ url_for('admin.orders', status='pago') }}" class="{% if status_filter=='pago' %}active{% endif %}">Pagos</a>
+    <a href="{{ url_for('admin.orders', status='enviado') }}" class="{% if status_filter=='enviado' %}active{% endif %}">Enviados</a>
+    <a href="{{ url_for('admin.orders', status='entregue') }}" class="{% if status_filter=='entregue' %}active{% endif %}">Entregues</a>
+    <a href="{{ url_for('admin.orders', status='cancelado') }}" class="{% if status_filter=='cancelado' %}active{% endif %}">Cancelados</a>
+  </div>
+</div>
+
+<div class="table-wrap">
+  <table class="admin-table">
+    <thead>
+      <tr><th>#</th><th>Cliente</th><th>Total</th><th>Status</th><th>Pagamento MP</th><th>Data</th><th></th></tr>
+    </thead>
+    <tbody>
+      {% for order in orders %}
+      <tr>
+        <td>#{{ order.id }}</td>
+        <td>{{ order.user.name }}<br><small>{{ order.user.email }}</small></td>
+        <td>R$ {{ "%.2f"|format(order.total)|replace(".", ",") }}</td>
+        <td><span class="status-badge {{ order.status_label[1] }}">{{ order.status_label[0] }}</span></td>
+        <td>{{ order.mp_status or '—' }}</td>
+        <td>{{ order.created_at.strftime('%d/%m/%Y %H:%M') }}</td>
+        <td><a href="{{ url_for('admin.order_detail', order_id=order.id) }}" class="btn-link">Detalhes</a></td>
+      </tr>
+      {% else %}
+      <tr><td colspan="7" class="text-center">Nenhum pedido encontrado.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

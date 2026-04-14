@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Login — RDR Imports{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-logo">RDR <span>Imports</span></div>
+    <h2>Entrar na conta</h2>
+    <form method="post" action="{{ url_for('auth.login') }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+      <div class="form-group">
+        <label>E-mail</label>
+        <input type="email" name="email" required autocomplete="email" />
+      </div>
+      <div class="form-group">
+        <label>Senha</label>
+        <input type="password" name="password" required autocomplete="current-password" />
+      </div>
+      <div class="form-check">
+        <input type="checkbox" name="remember" id="remember" />
+        <label for="remember">Lembrar-me</label>
+      </div>
+      <button type="submit" class="btn btn-gold btn-full">Entrar</button>
+    </form>
+    <p class="auth-link">Não tem conta? <a href="{{ url_for('auth.register') }}">Criar agora</a></p>
+  </div>
+</div>
+{% endblock %}

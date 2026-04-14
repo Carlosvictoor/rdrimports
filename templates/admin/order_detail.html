@@ -1,0 +1,68 @@
+{% extends "admin/base.html" %}
+{% block title %}Pedido #{{ order.id }}{% endblock %}
+{% block page_title %}Pedido #{{ order.id }}{% endblock %}
+
+{% block content %}
+<div class="order-detail-grid">
+  <div class="order-info">
+    <div class="info-card">
+      <h3>Dados do Pedido</h3>
+      <p><strong>Cliente:</strong> {{ order.user.name }} ({{ order.user.email }})</p>
+      <p><strong>Data:</strong> {{ order.created_at.strftime('%d/%m/%Y às %H:%M') }}</p>
+      <p><strong>Total:</strong> R$ {{ "%.2f"|format(order.total)|replace(".", ",") }}</p>
+      <p><strong>Status MP:</strong> {{ order.mp_status or '—' }}</p>
+      {% if order.mp_payment_id %}<p><strong>ID Pagamento:</strong> {{ order.mp_payment_id }}</p>{% endif %}
+    </div>
+
+    <div class="info-card">
+      <h3>Endereço de Entrega</h3>
+      {% if order.address_street %}
+        <p>{{ order.address_street }}, {{ order.address_number }}
+          {% if order.address_complement %} — {{ order.address_complement }}{% endif %}
+        </p>
+        <p>{{ order.address_city }}/{{ order.address_state }} — CEP {{ order.address_zip }}</p>
+      {% else %}
+        <p>Não informado.</p>
+      {% endif %}
+    </div>
+
+    <div class="info-card">
+      <h3>Atualizar Status</h3>
+      <form method="post" action="{{ url_for('admin.order_update_status', order_id=order.id) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+        <select name="status">
+          {% for s in ['pendente','pago','enviado','entregue','cancelado'] %}
+            <option value="{{ s }}" {% if order.status == s %}selected{% endif %}>
+              {{ s|capitalize }}
+            </option>
+          {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-gold btn-sm">Salvar</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="order-items-card">
+    <h3>Itens do Pedido</h3>
+    <table class="admin-table">
+      <thead><tr><th>Produto</th><th>Qtd.</th><th>Unit.</th><th>Subtotal</th></tr></thead>
+      <tbody>
+        {% for item in order.items %}
+        <tr>
+          <td>{{ item.product.name if item.product else 'Produto removido' }}</td>
+          <td>{{ item.quantity }}</td>
+          <td>R$ {{ "%.2f"|format(item.unit_price)|replace(".", ",") }}</td>
+          <td>R$ {{ "%.2f"|format(item.subtotal)|replace(".", ",") }}</td>
+        </tr>
+        {% endfor %}
+        <tr class="total-row">
+          <td colspan="3"><strong>Total</strong></td>
+          <td><strong>R$ {{ "%.2f"|format(order.total)|replace(".", ",") }}</strong></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<a href="{{ url_for('admin.orders') }}" class="btn btn-outline mt-3"><i class="bi bi-arrow-left"></i> Voltar</a>
+{% endblock %}

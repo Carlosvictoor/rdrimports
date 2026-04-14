@@ -1,0 +1,51 @@
+{% extends "admin/base.html" %}
+{% block title %}Produtos{% endblock %}
+{% block page_title %}Produtos{% endblock %}
+
+{% block content %}
+<div class="admin-section-header">
+  <form method="get" class="search-form">
+    <input type="text" name="q" value="{{ q }}" placeholder="Buscar produto..." />
+    <button type="submit" class="btn btn-sm">Buscar</button>
+  </form>
+  <a href="{{ url_for('admin.product_new') }}" class="btn btn-gold btn-sm">
+    <i class="bi bi-plus-lg"></i> Novo Produto
+  </a>
+</div>
+
+<div class="table-wrap">
+  <table class="admin-table">
+    <thead>
+      <tr><th>Imagem</th><th>Nome</th><th>Categoria</th><th>Preço</th><th>Estoque</th><th>Status</th><th>Ações</th></tr>
+    </thead>
+    <tbody>
+      {% for p in products %}
+      <tr>
+        <td><img src="{{ p.image_url }}" class="table-thumb" alt="" /></td>
+        <td>{{ p.name }}{% if p.featured %} <i class="bi bi-star-fill text-gold" title="Destaque"></i>{% endif %}</td>
+        <td>{{ p.category.name if p.category else '—' }}</td>
+        <td>R$ {{ "%.2f"|format(p.price)|replace(".", ",") }}</td>
+        <td class="{% if p.stock == 0 %}text-danger{% elif p.stock < 5 %}text-warning{% endif %}">{{ p.stock }}</td>
+        <td>
+          {% if p.active %}
+            <span class="status-badge success">Ativo</span>
+          {% else %}
+            <span class="status-badge danger">Inativo</span>
+          {% endif %}
+        </td>
+        <td class="actions">
+          <a href="{{ url_for('admin.product_edit', prod_id=p.id) }}" title="Editar"><i class="bi bi-pencil"></i></a>
+          <form action="{{ url_for('admin.product_delete', prod_id=p.id) }}" method="post" style="display:inline"
+                onsubmit="return confirm('Desativar este produto?')">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+            <button type="submit" title="Desativar"><i class="bi bi-eye-slash"></i></button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="7" class="text-center">Nenhum produto encontrado.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

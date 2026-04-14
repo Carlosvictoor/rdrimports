@@ -1,0 +1,44 @@
+{% extends "admin/base.html" %}
+{% block title %}Categorias{% endblock %}
+{% block page_title %}Categorias{% endblock %}
+
+{% block content %}
+<div class="admin-section-header">
+  <span>{{ categories|length }} categorias</span>
+  <a href="{{ url_for('admin.category_new') }}" class="btn btn-gold btn-sm">
+    <i class="bi bi-plus-lg"></i> Nova Categoria
+  </a>
+</div>
+
+<div class="table-wrap">
+  <table class="admin-table">
+    <thead>
+      <tr><th>Imagem</th><th>Nome</th><th>Slug</th><th>Produtos</th><th>Ações</th></tr>
+    </thead>
+    <tbody>
+      {% for cat in categories %}
+      <tr>
+        <td>
+          {% if cat.image %}
+            <img src="{{ url_for('static', filename='uploads/' ~ cat.image) }}" class="table-thumb" alt="" />
+          {% else %}—{% endif %}
+        </td>
+        <td>{{ cat.name }}</td>
+        <td><code>{{ cat.slug }}</code></td>
+        <td>{{ cat.products|length }}</td>
+        <td class="actions">
+          <a href="{{ url_for('admin.category_edit', cat_id=cat.id) }}" title="Editar"><i class="bi bi-pencil"></i></a>
+          <form action="{{ url_for('admin.category_delete', cat_id=cat.id) }}" method="post" style="display:inline"
+                onsubmit="return confirm('Excluir categoria?')">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+            <button type="submit" title="Excluir"><i class="bi bi-trash"></i></button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="5" class="text-center">Nenhuma categoria criada ainda.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

@@ -1,0 +1,78 @@
+{% extends "admin/base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="stats-grid">
+  <div class="stat-card gold">
+    <i class="bi bi-currency-dollar"></i>
+    <div>
+      <p>Receita (pagos)</p>
+      <h2>R$ {{ "%.2f"|format(stats.revenue)|replace(".", ",") }}</h2>
+    </div>
+  </div>
+  <div class="stat-card">
+    <i class="bi bi-receipt"></i>
+    <div>
+      <p>Total de Pedidos</p>
+      <h2>{{ stats.orders }}</h2>
+    </div>
+  </div>
+  <div class="stat-card">
+    <i class="bi bi-clock-history"></i>
+    <div>
+      <p>Pedidos Pendentes</p>
+      <h2>{{ stats.pending_orders }}</h2>
+    </div>
+  </div>
+  <div class="stat-card">
+    <i class="bi bi-box"></i>
+    <div>
+      <p>Produtos</p>
+      <h2>{{ stats.products }}</h2>
+    </div>
+  </div>
+  <div class="stat-card">
+    <i class="bi bi-tags"></i>
+    <div>
+      <p>Categorias</p>
+      <h2>{{ stats.categories }}</h2>
+    </div>
+  </div>
+  <div class="stat-card">
+    <i class="bi bi-people"></i>
+    <div>
+      <p>Usuários</p>
+      <h2>{{ stats.users }}</h2>
+    </div>
+  </div>
+</div>
+
+<div class="admin-section">
+  <div class="admin-section-header">
+    <h2>Últimos Pedidos</h2>
+    <a href="{{ url_for('admin.orders') }}" class="btn-link">Ver todos</a>
+  </div>
+  <div class="table-wrap">
+    <table class="admin-table">
+      <thead>
+        <tr><th>#</th><th>Cliente</th><th>Total</th><th>Status</th><th>Data</th><th></th></tr>
+      </thead>
+      <tbody>
+        {% for order in recent_orders %}
+        <tr>
+          <td>#{{ order.id }}</td>
+          <td>{{ order.user.name }}</td>
+          <td>R$ {{ "%.2f"|format(order.total)|replace(".", ",") }}</td>
+          <td><span class="status-badge {{ order.status_label[1] }}">{{ order.status_label[0] }}</span></td>
+          <td>{{ order.created_at.strftime('%d/%m/%Y %H:%M') }}</td>
+          <td><a href="{{ url_for('admin.order_detail', order_id=order.id) }}" class="btn-link">Ver</a></td>
+        </tr>
+        {% else %}
+        <tr><td colspan="6" class="text-center">Nenhum pedido ainda.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,32 @@
+<article class="product-card">
+  {% if product.discount_percent > 0 %}
+    <span class="badge-discount">-{{ product.discount_percent }}%</span>
+  {% endif %}
+  {% if product.stock == 0 %}
+    <span class="badge-out">Esgotado</span>
+  {% endif %}
+  <a href="{{ url_for('main.product_detail', slug=product.slug) }}" class="product-card-img">
+    <img src="{{ product.image_url }}" alt="{{ product.name }}" loading="lazy" />
+  </a>
+  <div class="product-card-body">
+    {% if product.category %}
+      <span class="product-card-cat">{{ product.category.name }}</span>
+    {% endif %}
+    <h3><a href="{{ url_for('main.product_detail', slug=product.slug) }}">{{ product.name }}</a></h3>
+    {% if product.brand %}<p class="product-brand">{{ product.brand }}{% if product.volume %} · {{ product.volume }}{% endif %}</p>{% endif %}
+    <div class="product-price">
+      {% if product.original_price and product.original_price > product.price %}
+        <span class="price-old">R$ {{ "%.2f"|format(product.original_price)|replace(".", ",") }}</span>
+      {% endif %}
+      <span class="price-current">R$ {{ "%.2f"|format(product.price)|replace(".", ",") }}</span>
+    </div>
+    <form action="{{ url_for('cart.add', product_id=product.id) }}" method="post" class="add-cart-form">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+      <input type="hidden" name="qty" value="1" />
+      <button type="submit" class="btn btn-gold btn-sm" {% if product.stock == 0 %}disabled{% endif %}>
+        <i class="bi bi-bag-plus"></i>
+        {% if product.stock == 0 %}Esgotado{% else %}Adicionar{% endif %}
+      </button>
+    </form>
+  </div>
+</article>

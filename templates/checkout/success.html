@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Pedido Confirmado — RDR Imports{% endblock %}
+
+{% block content %}
+<div class="container success-page">
+  <div class="success-card">
+    <div class="success-icon"><i class="bi bi-check-circle"></i></div>
+    <h1>Pedido Recebido!</h1>
+    <p>Obrigado pela sua compra, <strong>{{ current_user.name }}</strong>.</p>
+
+    <div class="order-summary-box">
+      <p><strong>Pedido Nº:</strong> #{{ order.id }}</p>
+      <p><strong>Total:</strong> R$ {{ "%.2f"|format(order.total)|replace(".", ",") }}</p>
+      <p>
+        <strong>Status:</strong>
+        <span class="status-badge {{ order.status_label[1] }}">{{ order.status_label[0] }}</span>
+      </p>
+    </div>
+
+    {% if order.status == 'pendente' %}
+    <p class="text-muted">Assim que o pagamento for confirmado, você receberá um e-mail.</p>
+    {% endif %}
+
+    <a href="{{ url_for('main.catalog') }}" class="btn btn-gold">Continuar Comprando</a>
+  </div>
+</div>
+{% endblock %}

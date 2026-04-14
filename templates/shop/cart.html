@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}Carrinho — RDR Imports{% endblock %}
+
+{% block content %}
+<div class="container cart-page">
+  <h1>Seu Carrinho</h1>
+
+  {% if cart %}
+  <div class="cart-layout">
+    <div class="cart-items">
+      {% for pid, item in cart.items() %}
+      <div class="cart-row">
+        <img src="{{ item.image }}" alt="{{ item.name }}" class="cart-item-img" />
+        <div class="cart-item-info">
+          <a href="{{ url_for('main.product_detail', slug=item.slug) }}">{{ item.name }}</a>
+          <span>R$ {{ "%.2f"|format(item.price)|replace(".", ",") }}</span>
+        </div>
+        <div class="cart-item-controls">
+          <form action="{{ url_for('cart.update', product_id=pid) }}" method="post" class="qty-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+            <div class="qty-control small">
+              <button type="button" onclick="adjustQty(this, -1)"><i class="bi bi-dash"></i></button>
+              <input type="number" name="qty" value="{{ item.qty }}" min="1" class="qty-input" />
+              <button type="button" onclick="adjustQty(this, 1)"><i class="bi bi-plus"></i></button>
+            </div>
+            <button type="submit" class="btn-link">Atualizar</button>
+          </form>
+          <form action="{{ url_for('cart.remove', product_id=pid) }}" method="post">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+            <button type="submit" class="btn-icon-danger" title="Remover"><i class="bi bi-trash"></i></button>
+          </form>
+        </div>
+        <div class="cart-item-total">
+          R$ {{ "%.2f"|format(item.price * item.qty)|replace(".", ",") }}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="cart-summary">
+      <h3>Resumo</h3>
+      <div class="summary-row">
+        <span>Subtotal</span>
+        <strong>R$ {{ "%.2f"|format(total)|replace(".", ",") }}</strong>
+      </div>
+      <div class="summary-row">
+        <span>Frete</span>
+        <span class="text-gold">Calculado no checkout</span>
+      </div>
+      <hr />
+      <div class="summary-row total">
+        <span>Total</span>
+        <strong>R$ {{ "%.2f"|format(total)|replace(".", ",") }}</strong>
+      </div>
+      <a href="{{ url_for('payment.checkout') }}" class="btn btn-gold btn-full">
+        <i class="bi bi-lock"></i> Finalizar Compra
+      </a>
+      <a href="{{ url_for('main.catalog') }}" class="btn btn-outline-gold btn-full mt-2">
+        Continuar Comprando
+      </a>
+
+      <form action="{{ url_for('cart.clear') }}" method="post" class="mt-3">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+        <button type="submit" class="btn-link text-danger">Limpar carrinho</button>
+      </form>
+    </div>
+  </div>
+
+  {% else %}
+  <div class="empty-state">
+    <i class="bi bi-bag-x"></i>
+    <p>Seu carrinho está vazio.</p>
+    <a href="{{ url_for('main.catalog') }}" class="btn btn-gold">Explorar Loja</a>
+  </div>
+  {% endif %}
+</div>
+
+{% block extra_js %}
+<script>
+function adjustQty(btn, delta) {
+  const input = btn.parentElement.querySelector('.qty-input');
+  let val = parseInt(input.value) + delta;
+  input.value = Math.max(1, val);
+}
+</script>
+{% endblock %}
+{% endblock %}

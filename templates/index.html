@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}RDR Imports — Perfumes e Importados{% endblock %}
+
+{% block content %}
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="hero-content">
+    <p class="hero-sub">Coleção Exclusiva</p>
+    <h1 class="hero-title">Sinta o <span>Luxo</span><br>dos Melhores Perfumes</h1>
+    <p class="hero-desc">Importados direto da fonte. Fragrâncias únicas para pessoas únicas.</p>
+    <a href="{{ url_for('main.catalog') }}" class="btn btn-gold">Explorar Coleção</a>
+  </div>
+  <div class="hero-deco"></div>
+</section>
+
+<!-- ===== CATEGORIAS ===== -->
+{% if categories %}
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <h2>Nossas Categorias</h2>
+      <p>Encontre o perfume perfeito para cada ocasião</p>
+    </div>
+    <div class="categories-grid">
+      {% for cat in categories %}
+      <a href="{{ url_for('main.catalog', categoria=cat.slug) }}" class="cat-card">
+        {% if cat.image %}
+          <img src="{{ url_for('static', filename='uploads/' ~ cat.image) }}" alt="{{ cat.name }}" />
+        {% else %}
+          <div class="cat-card-placeholder"><i class="bi bi-droplet-fill"></i></div>
+        {% endif %}
+        <span>{{ cat.name }}</span>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- ===== DESTAQUES ===== -->
+{% if featured %}
+<section class="section section-dark">
+  <div class="container">
+    <div class="section-header">
+      <h2>Destaques</h2>
+      <p>Os favoritos dos nossos clientes</p>
+    </div>
+    <div class="products-grid">
+      {% for product in featured %}
+        {% include "shop/_product_card.html" %}
+      {% endfor %}
+    </div>
+    <div class="text-center mt-4">
+      <a href="{{ url_for('main.catalog') }}" class="btn btn-outline-gold">Ver todos os produtos</a>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- ===== DIFERENCIAIS ===== -->
+<section class="section">
+  <div class="container">
+    <div class="features-grid">
+      <div class="feature-card">
+        <i class="bi bi-shield-check"></i>
+        <h3>100% Originais</h3>
+        <p>Todos os produtos são importados com certificado de autenticidade.</p>
+      </div>
+      <div class="feature-card">
+        <i class="bi bi-truck"></i>
+        <h3>Entrega Rápida</h3>
+        <p>Enviamos para todo o Brasil com embalagem premium.</p>
+      </div>
+      <div class="feature-card">
+        <i class="bi bi-arrow-return-left"></i>
+        <h3>Troca Garantida</h3>
+        <p>Até 7 dias para troca ou devolução sem complicação.</p>
+      </div>
+      <div class="feature-card">
+        <i class="bi bi-lock"></i>
+        <h3>Pagamento Seguro</h3>
+        <p>Compra 100% segura via Mercado Pago.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

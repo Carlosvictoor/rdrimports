@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block title %}{{ product.name }} — RDR Imports{% endblock %}
+
+{% block content %}
+<div class="container product-detail">
+  <nav class="breadcrumb">
+    <a href="{{ url_for('main.index') }}">Início</a>
+    <span>/</span>
+    <a href="{{ url_for('main.catalog') }}">Loja</a>
+    {% if product.category %}
+      <span>/</span>
+      <a href="{{ url_for('main.catalog', categoria=product.category.slug) }}">{{ product.category.name }}</a>
+    {% endif %}
+    <span>/</span>
+    <span>{{ product.name }}</span>
+  </nav>
+
+  <div class="product-detail-grid">
+    <!-- Imagem -->
+    <div class="product-detail-img">
+      <img src="{{ product.image_url }}" alt="{{ product.name }}" />
+      {% if product.discount_percent > 0 %}
+        <span class="badge-discount big">-{{ product.discount_percent }}%</span>
+      {% endif %}
+    </div>
+
+    <!-- Info -->
+    <div class="product-detail-info">
+      {% if product.category %}
+        <span class="product-card-cat">{{ product.category.name }}</span>
+      {% endif %}
+      <h1>{{ product.name }}</h1>
+      {% if product.brand %}
+        <p class="product-brand">{{ product.brand }}{% if product.volume %} · {{ product.volume }}{% endif %}</p>
+      {% endif %}
+
+      <div class="product-price big">
+        {% if product.original_price and product.original_price > product.price %}
+          <span class="price-old">R$ {{ "%.2f"|format(product.original_price)|replace(".", ",") }}</span>
+        {% endif %}
+        <span class="price-current">R$ {{ "%.2f"|format(product.price)|replace(".", ",") }}</span>
+      </div>
+
+      {% if product.stock > 0 %}
+        <p class="stock-info"><i class="bi bi-check-circle-fill"></i> Em estoque ({{ product.stock }} unid.)</p>
+      {% else %}
+        <p class="stock-info out"><i class="bi bi-x-circle-fill"></i> Esgotado</p>
+      {% endif %}
+
+      {% if product.description %}
+        <div class="product-desc">
+          <p>{{ product.description }}</p>
+        </div>
+      {% endif %}
+
+      <form action="{{ url_for('cart.add', product_id=product.id) }}" method="post" class="add-cart-form detail">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+        <div class="qty-control">
+          <button type="button" onclick="changeQty(-1)"><i class="bi bi-dash"></i></button>
+          <input type="number" name="qty" id="qtyInput" value="1" min="1" max="{{ product.stock }}" />
+          <button type="button" onclick="changeQty(1)"><i class="bi bi-plus"></i></button>
+        </div>
+        <button type="submit" class="btn btn-gold" {% if product.stock == 0 %}disabled{% endif %}>
+          <i class="bi bi-bag-plus"></i>
+          {% if product.stock == 0 %}Esgotado{% else %}Adicionar ao Carrinho{% endif %}
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Produtos relacionados -->
+  {% if related %}
+  <section class="related-products">
+    <h2>Você também pode gostar</h2>
+    <div class="products-grid">
+      {% for product in related %}
+        {% include "shop/_product_card.html" %}
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+</div>
+
+{% block extra_js %}
+<script>
+function changeQty(delta) {
+  const input = document.getElementById('qtyInput');
+  let val = parseInt(input.value) + delta;
+  val = Math.max(1, Math.min(val, parseInt(input.max)));
+  input.value = val;
+}
+</script>
+{% endblock %}
+{% endblock %}
