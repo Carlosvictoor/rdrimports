@@ -49,6 +49,11 @@
         <a href="{{ url_for('auth.login') }}" title="Entrar"><i class="bi bi-person"></i></a>
       {% endif %}
 
+      <a href="{{ url_for('reviews.index') }}" class="reviews-nav-btn" title="Avaliações">
+        <i class="bi bi-star-fill"></i>
+        <span class="reviews-nav-label">Avaliações</span>
+      </a>
+
       <a href="{{ url_for('cart.view') }}" class="cart-btn" title="Carrinho">
         <i class="bi bi-bag"></i>
         <span class="cart-badge" id="cartBadge">

@@ -76,12 +76,14 @@ def create_app(config_class=Config):
     from routes.admin import admin_bp
     from routes.cart import cart_bp
     from routes.payment import payment_bp
+    from routes.reviews import reviews_bp
 
     app.register_blueprint(main_bp)
     app.register_blueprint(auth_bp, url_prefix="/auth")
     app.register_blueprint(admin_bp, url_prefix="/admin")
     app.register_blueprint(cart_bp, url_prefix="/carrinho")
     app.register_blueprint(payment_bp, url_prefix="/pagamento")
+    app.register_blueprint(reviews_bp)
 
     # ── Handlers de erro ───────────────────────────────────────────────────
     @app.errorhandler(400)

@@ -1,5 +1,10 @@
 {% extends "base.html" %}
+{% from "reviews/_stars.html" import stars %}
 {% block title %}{{ product.name }} — RDR Imports{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/reviews.css') }}" />
+{% endblock %}
 
 {% block content %}
 <div class="container product-detail">
@@ -79,6 +84,54 @@
     </div>
   </section>
   {% endif %}
+
+  <!-- ─── Avaliações do produto ─────────────────────────────────── -->
+  <section class="product-reviews-section">
+    <h2><i class="bi bi-star-fill"></i> Avaliações do produto</h2>
+
+    <!-- Resumo -->
+    {% if product_reviews %}
+    <div class="product-review-summary">
+      <span class="product-avg-score">{{ "%.1f"|format(avg_rating) }}</span>
+      {{ stars(avg_rating, 'lg') }}
+      <span class="product-review-count">{{ product_reviews|length }} avaliação{{ 'ões' if product_reviews|length != 1 }}</span>
+    </div>
+    {% endif %}
+
+    <!-- Botão avaliar -->
+    {% if current_user.is_authenticated and can_review and not user_product_review %}
+      <a href="{{ url_for('reviews.create_product', product_id=product.id) }}" class="btn btn-outline" style="margin-bottom:1.5rem;display:inline-flex;align-items:center;gap:.4rem;">
+        <i class="bi bi-pencil-square"></i> Avaliar este produto
+      </a>
+    {% elif not current_user.is_authenticated %}
+      <a href="{{ url_for('auth.login') }}" class="btn btn-outline" style="margin-bottom:1.5rem;display:inline-flex;align-items:center;gap:.4rem;">
+        <i class="bi bi-person"></i> Entre para avaliar
+      </a>
+    {% endif %}
+
+    <!-- Cards de avaliações -->
+    {% if product_reviews %}
+    <div class="reviews-grid">
+      {% for r in product_reviews %}
+      <div class="review-card">
+        <div class="review-card-header">
+          <div class="review-avatar">{{ r.user.name[0].upper() }}</div>
+          <div class="review-meta">
+            <strong class="review-author">{{ r.user.name }}</strong>
+            <span class="review-date">{{ r.created_at.strftime('%d/%m/%Y') }}</span>
+          </div>
+          {{ stars(r.rating) }}
+        </div>
+        {% if r.title %}<h4 class="review-title">{{ r.title }}</h4>{% endif %}
+        <p class="review-body">{{ r.body }}</p>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p style="color:#666;font-size:.9rem;">Ainda não há avaliações para este produto.</p>
+    {% endif %}
+  </section>
+
 </div>
 
 {% block extra_js %}

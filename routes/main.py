@@ -1,7 +1,10 @@
 from flask import Blueprint, render_template, request, abort
+from flask_login import current_user
 from models.product import Product
 from models.category import Category
-from sqlalchemy import or_
+from models.review import ProductReview
+from models.order import Order, OrderItem
+from sqlalchemy import or_, func
 from core.security import sanitize_search
 
 main_bp = Blueprint("main", __name__)
@@ -57,6 +60,7 @@ def catalog():
 
 @main_bp.route("/produto/<slug>")
 def product_detail(slug):
+    from core.extensions import db
     product = Product.query.filter_by(slug=slug, active=True).first_or_404()
     related = (
         Product.query.filter(
@@ -67,4 +71,43 @@ def product_detail(slug):
         .limit(4)
         .all()
     )
-    return render_template("shop/product.html", product=product, related=related)
+
+    # Avaliações e média do produto
+    product_reviews = (
+        ProductReview.query
+        .filter_by(product_id=product.id, approved=True)
+        .order_by(ProductReview.created_at.desc())
+        .all()
+    )
+    avg_rating = (
+        db.session.query(func.avg(ProductReview.rating))
+        .filter_by(product_id=product.id, approved=True)
+        .scalar() or 0
+    )
+
+    # Verifica se usuário pode avaliar (comprou e ainda não avaliou)
+    can_review = False
+    user_product_review = None
+    if current_user.is_authenticated:
+        user_product_review = ProductReview.query.filter_by(
+            user_id=current_user.id, product_id=product.id
+        ).first()
+        if not user_product_review:
+            can_review = db.session.query(
+                db.exists().where(
+                    OrderItem.product_id == product.id,
+                    OrderItem.order_id == Order.id,
+                    Order.user_id == current_user.id,
+                    Order.status.in_(["pago", "enviado", "entregue"]),
+                )
+            ).scalar()
+
+    return render_template(
+        "shop/product.html",
+        product=product,
+        related=related,
+        product_reviews=product_reviews,
+        avg_rating=avg_rating,
+        can_review=can_review,
+        user_product_review=user_product_review,
+    )

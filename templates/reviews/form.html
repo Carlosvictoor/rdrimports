@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% from "reviews/_stars.html" import stars_input %}
+{% block title %}
+  {% if mode == 'product' %}Avaliar {{ product.name }}{% else %}Avaliar a Loja{% endif %} — RDR Imports
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/reviews.css') }}" />
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="review-form-wrap">
+
+    <div class="review-form-header">
+      <i class="bi bi-star-fill review-form-icon"></i>
+      {% if mode == 'product' %}
+        <h1>Avaliar produto</h1>
+        <p>Você comprou <strong>{{ product.name }}</strong>. Conte como foi!</p>
+      {% else %}
+        <h1>Avaliar a RDR Imports</h1>
+        <p>Sua opinião ajuda outros clientes e melhora nossa loja.</p>
+      {% endif %}
+    </div>
+
+    <form method="post" class="review-form" novalidate>
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+      <!-- Seletor de estrelas interativo -->
+      <div class="form-group">
+        <label>Sua nota *</label>
+        {{ stars_input('rating') }}
+        <span class="stars-hint">Clique para selecionar</span>
+      </div>
+
+      <!-- Título curto -->
+      <div class="form-group">
+        <label for="r-title">Título (opcional)</label>
+        <input type="text" id="r-title" name="title"
+               placeholder="Ex: Produto incrível, entrega rápida…"
+               maxlength="120" />
+      </div>
+
+      <!-- Comentário -->
+      <div class="form-group">
+        <label for="r-body">Seu comentário *</label>
+        <textarea id="r-body" name="body" rows="5" required minlength="10" maxlength="1000"
+                  placeholder="Compartilhe sua experiência com detalhes…"></textarea>
+        <span class="char-counter"><span id="charCount">0</span>/1000</span>
+      </div>
+
+      <div class="review-form-actions">
+        <a href="{% if mode == 'product' %}{{ url_for('main.product_detail', slug=product.slug) }}{% else %}{{ url_for('reviews.index') }}{% endif %}"
+           class="btn btn-outline">Cancelar</a>
+        <button type="submit" class="btn btn-gold">
+          <i class="bi bi-send-fill"></i> Publicar avaliação
+        </button>
+      </div>
+    </form>
+
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Contador de caracteres
+const body = document.getElementById('r-body');
+const counter = document.getElementById('charCount');
+body.addEventListener('input', () => { counter.textContent = body.value.length; });
+
+// Label de texto da nota selecionada
+const labels = ['', 'Péssimo', 'Ruim', 'Regular', 'Bom', 'Excelente'];
+const hint = document.querySelector('.stars-hint');
+document.querySelectorAll('.stars-input input').forEach(input => {
+  input.addEventListener('change', () => {
+    hint.textContent = labels[parseInt(input.value)] || '';
+    hint.style.color = 'var(--gold)';
+  });
+});
+</script>
+{% endblock %}

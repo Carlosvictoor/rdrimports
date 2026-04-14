@@ -1,0 +1,33 @@
+{# Macro reutilizável para exibir estrelas
+   Uso: {% from "reviews/_stars.html" import stars %}
+        {{ stars(4.5) }}
+   Parâmetros: value (float 1-5), size ('sm'|'md'|'lg')
+#}
+{% macro stars(value, size='md') %}
+{% set full = value | int %}
+{% set half = (value - full) >= 0.4 %}
+<span class="stars stars-{{ size }}" aria-label="{{ value }} de 5 estrelas">
+  {% for i in range(1, 6) %}
+    {% if i <= full %}
+      <i class="bi bi-star-fill"></i>
+    {% elif i == full + 1 and half %}
+      <i class="bi bi-star-half"></i>
+    {% else %}
+      <i class="bi bi-star"></i>
+    {% endif %}
+  {% endfor %}
+</span>
+{% endmacro %}
+
+{# Macro para input interativo de estrelas (formulário) #}
+{% macro stars_input(name='rating', selected=0) %}
+<div class="stars-input" role="radiogroup" aria-label="Selecione a nota">
+  {% for i in range(1, 6) %}
+  <input type="radio" name="{{ name }}" id="star{{ i }}" value="{{ i }}"
+         {% if selected == i %}checked{% endif %} required />
+  <label for="star{{ i }}" title="{{ i }} estrela{{ 's' if i > 1 }}">
+    <i class="bi bi-star-fill"></i>
+  </label>
+  {% endfor %}
+</div>
+{% endmacro %}

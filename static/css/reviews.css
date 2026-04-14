@@ -1,0 +1,386 @@
+/* ===================================================
+   reviews.css — Sistema de Avaliações RDR Imports
+   Tema: preto / dourado / branco
+   =================================================== */
+
+/* ── Estrelas (exibição) ─────────────────────────── */
+.stars { display: inline-flex; gap: 2px; }
+.stars .bi-star-fill  { color: var(--gold, #c9a84c); }
+.stars .bi-star-half  { color: var(--gold, #c9a84c); }
+.stars .bi-star       { color: #444; }
+
+.stars-sm { font-size: .8rem; }
+.stars-md { font-size: 1rem; }
+.stars-lg { font-size: 1.6rem; }
+
+/* ── Estrelas (input interativo) ─────────────────── */
+.stars-input {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+  gap: 4px;
+  margin: .5rem 0;
+}
+
+.stars-input input[type="radio"] {
+  display: none;
+}
+
+.stars-input label {
+  font-size: 2rem;
+  color: #444;
+  cursor: pointer;
+  transition: color .15s, transform .15s;
+}
+
+/* Hover: destaca esta e todas à esquerda (row-reverse) */
+.stars-input label:hover,
+.stars-input label:hover ~ label,
+.stars-input input:checked ~ label {
+  color: var(--gold, #c9a84c);
+  transform: scale(1.15);
+}
+
+.stars-hint {
+  display: block;
+  font-size: .8rem;
+  color: #888;
+  margin-top: .25rem;
+  min-height: 1.2em;
+}
+
+/* ── Página de avaliações ────────────────────────── */
+.reviews-page { padding: 2rem 0 4rem; }
+
+.reviews-hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid #222;
+}
+
+.reviews-hero-text h1 {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 2.4rem;
+  color: var(--white, #fff);
+  margin: 0 0 .3rem;
+}
+
+.reviews-hero-text h1 .bi-star-fill { color: var(--gold, #c9a84c); }
+
+.reviews-hero-text p {
+  color: #999;
+  margin: 0;
+}
+
+/* ── Painel estatísticas ─────────────────────────── */
+.reviews-stats {
+  display: flex;
+  gap: 2.5rem;
+  align-items: center;
+  background: #111;
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  padding: 2rem 2.5rem;
+  margin-bottom: 2.5rem;
+  flex-wrap: wrap;
+}
+
+.reviews-score {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .5rem;
+  min-width: 120px;
+}
+
+.score-big {
+  font-size: 4rem;
+  font-weight: 700;
+  color: var(--gold, #c9a84c);
+  line-height: 1;
+  font-family: "Cormorant Garamond", serif;
+}
+
+.score-total { font-size: .8rem; color: #888; }
+
+/* Barras de distribuição */
+.reviews-bars { flex: 1; display: flex; flex-direction: column; gap: .5rem; min-width: 200px; }
+
+.bar-row {
+  display: grid;
+  grid-template-columns: 40px 1fr 32px;
+  align-items: center;
+  gap: .6rem;
+}
+
+.bar-label { font-size: .8rem; color: #aaa; display: flex; align-items: center; gap: 3px; }
+.bar-label .bi-star-fill { color: var(--gold, #c9a84c); font-size: .7rem; }
+
+.bar-track {
+  background: #222;
+  border-radius: 99px;
+  height: 8px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #c9a84c, #f0c040);
+  border-radius: 99px;
+  transition: width .6s ease;
+}
+
+.bar-count { font-size: .75rem; color: #777; text-align: right; }
+
+/* ── Grid de cards ───────────────────────────────── */
+.reviews-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+/* ── Card individual ─────────────────────────────── */
+.review-card {
+  background: #0f0f0f;
+  border: 1px solid #222;
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: border-color .25s, transform .25s;
+  position: relative;
+}
+
+.review-card:hover {
+  border-color: var(--gold, #c9a84c);
+  transform: translateY(-3px);
+}
+
+/* Faixa dourada no topo */
+.review-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #c9a84c, #f0c040);
+  border-radius: 12px 12px 0 0;
+  opacity: 0;
+  transition: opacity .25s;
+}
+
+.review-card:hover::before { opacity: 1; }
+
+.review-card-header {
+  display: flex;
+  align-items: center;
+  gap: .85rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.review-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #c9a84c, #8a6515);
+  color: #000;
+  font-weight: 700;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.review-meta { flex: 1; min-width: 0; }
+
+.review-author {
+  display: block;
+  color: var(--white, #fff);
+  font-size: .95rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.review-date { font-size: .75rem; color: #666; }
+
+.review-title {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 1.1rem;
+  color: var(--gold, #c9a84c);
+  margin: 0 0 .5rem;
+}
+
+.review-body {
+  color: #ccc;
+  font-size: .9rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.review-delete-form {
+  margin-top: .75rem;
+  text-align: right;
+}
+
+.btn-link-danger {
+  background: none;
+  border: none;
+  color: #c0392b;
+  font-size: .8rem;
+  cursor: pointer;
+  padding: 0;
+  opacity: .7;
+  transition: opacity .2s;
+}
+
+.btn-link-danger:hover { opacity: 1; }
+
+/* ── Vazio ───────────────────────────────────────── */
+.reviews-empty {
+  text-align: center;
+  padding: 5rem 2rem;
+  color: #666;
+}
+
+.reviews-empty .bi-chat-heart {
+  font-size: 4rem;
+  color: var(--gold, #c9a84c);
+  opacity: .5;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+/* ── Formulário ──────────────────────────────────── */
+.review-form-wrap {
+  max-width: 640px;
+  margin: 3rem auto 5rem;
+  background: #0f0f0f;
+  border: 1px solid #2a2a2a;
+  border-radius: 16px;
+  padding: 2.5rem;
+}
+
+.review-form-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.review-form-icon {
+  font-size: 2.5rem;
+  color: var(--gold, #c9a84c);
+  display: block;
+  margin-bottom: .75rem;
+}
+
+.review-form-header h1 {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 2rem;
+  color: var(--white, #fff);
+  margin: 0 0 .4rem;
+}
+
+.review-form-header p { color: #888; margin: 0; font-size: .95rem; }
+
+.review-form .form-group { margin-bottom: 1.4rem; }
+
+.review-form label {
+  display: block;
+  color: #bbb;
+  font-size: .85rem;
+  margin-bottom: .4rem;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+.review-form input[type="text"],
+.review-form textarea {
+  width: 100%;
+  background: #161616;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: .75rem 1rem;
+  color: var(--white, #fff);
+  font-size: .95rem;
+  font-family: inherit;
+  transition: border-color .2s;
+  box-sizing: border-box;
+}
+
+.review-form input[type="text"]:focus,
+.review-form textarea:focus {
+  outline: none;
+  border-color: var(--gold, #c9a84c);
+  box-shadow: 0 0 0 3px rgba(201,168,76,.15);
+}
+
+.review-form textarea { resize: vertical; min-height: 120px; }
+
+.char-counter {
+  display: block;
+  text-align: right;
+  font-size: .75rem;
+  color: #555;
+  margin-top: .25rem;
+}
+
+.review-form-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 1.75rem;
+  flex-wrap: wrap;
+}
+
+/* ── Avaliações inline no produto ────────────────── */
+.product-reviews-section {
+  margin-top: 3rem;
+  padding-top: 2.5rem;
+  border-top: 1px solid #222;
+}
+
+.product-reviews-section h2 {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 1.7rem;
+  color: var(--white, #fff);
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+
+.product-reviews-section h2 .bi-star-fill { color: var(--gold, #c9a84c); font-size: 1.3rem; }
+
+.product-review-summary {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.product-avg-score {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--gold, #c9a84c);
+  font-family: "Cormorant Garamond", serif;
+  line-height: 1;
+}
+
+.product-review-count { color: #888; font-size: .85rem; }
+
+/* ── Responsivo ──────────────────────────────────── */
+@media (max-width: 768px) {
+  .reviews-stats { padding: 1.5rem; gap: 1.5rem; }
+  .score-big { font-size: 3rem; }
+  .reviews-grid { grid-template-columns: 1fr; }
+  .review-form-wrap { padding: 1.5rem; margin: 1.5rem auto 3rem; }
+  .reviews-hero { flex-direction: column; align-items: flex-start; }
+  .review-form-actions { flex-direction: column; }
+  .review-form-actions .btn { width: 100%; text-align: center; }
+}

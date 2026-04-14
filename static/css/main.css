@@ -181,6 +181,27 @@ h1, h2, h3 { font-family: 'Cormorant Garamond', serif; font-weight: 600; letter-
 .nav-actions a:hover { color: var(--gold); }
 
 .cart-btn { position: relative; }
+
+/* ── Botão de avaliações na navbar ── */
+.reviews-nav-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--white) !important;
+  text-decoration: none;
+  transition: color var(--transition);
+  white-space: nowrap;
+}
+.reviews-nav-btn:hover { color: var(--gold) !important; }
+.reviews-nav-btn .bi-star-fill { color: var(--gold); font-size: 1rem; }
+.reviews-nav-label {
+  font-size: .78rem;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+
 .cart-badge {
   position: absolute;
   top: -8px;
