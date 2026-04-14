@@ -74,4 +74,4 @@ def _seed_admin():
 if __name__ == "__main__":
     app = create_app()
     debug_mode = os.environ.get("FLASK_DEBUG", "1") == "1"
-    app.run(debug=debug_mode)
+    app.run(host='0.0.0.0', debug=debug_mode)
