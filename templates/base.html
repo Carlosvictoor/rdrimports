@@ -74,9 +74,21 @@
 
   <!-- Mobile menu -->
   <div class="nav-mobile" id="navMobile">
+    <!-- Busca mobile -->
+    <form class="nav-mobile-search" action="{{ url_for('main.catalog') }}" method="get">
+      <input type="text" name="q" placeholder="Buscar produtos..." value="{{ request.args.get('q','') }}" />
+      <button type="submit"><i class="bi bi-search"></i></button>
+    </form>
     <a href="{{ url_for('main.index') }}">Início</a>
     <a href="{{ url_for('main.catalog') }}">Produtos</a>
     <a href="{{ url_for('reviews.index') }}">Avaliações</a>
+    <a href="{{ url_for('cart.view') }}" class="cart-mobile-link">
+      <i class="bi bi-cart3"></i> Carrinho
+      <span class="cart-badge-mobile">
+        {% set cart = session.get('cart', {}) %}
+        {{ cart.values()|sum(attribute='qty') if cart else 0 }}
+      </span>
+    </a>
     {% for cat in categories|default([]) %}
       <a href="{{ url_for('main.catalog', categoria=cat.slug) }}">{{ cat.name }}</a>
     {% endfor %}
