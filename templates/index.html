@@ -1,26 +1,181 @@
 {% extends "base.html" %}
-{% block title %}RDR Imports — Perfumes e Importados{% endblock %}
+{% block title %}RDR Imports — Importados de Qualidade{% endblock %}
 
 {% block content %}
 
 <!-- ===== HERO ===== -->
 <section class="hero">
-  <div class="hero-content">
-    <p class="hero-sub">Coleção Exclusiva</p>
-    <h1 class="hero-title">Sinta o <span>Luxo</span><br>dos Melhores Perfumes</h1>
-    <p class="hero-desc">Importados direto da fonte. Fragrâncias únicas para pessoas únicas.</p>
-    <a href="{{ url_for('main.catalog') }}" class="btn btn-gold">Explorar Coleção</a>
+  <div class="hero-inner container">
+    <div class="hero-content">
+      <p class="hero-sub">✦ produtos originais importados ✦</p>
+      <h1 class="hero-title">IMPORTADOS<br><span>DE QUALIDADE</span></h1>
+      <p class="hero-desc">Os melhores produtos pelos melhores preços.<br>Entrega para todo o Brasil.</p>
+      <div class="hero-cta-group">
+        <a href="{{ url_for('main.catalog') }}" class="btn btn-gold btn-hero">
+          COMPRAR AGORA <i class="bi bi-arrow-right"></i>
+        </a>
+        <a href="https://wa.me/5513997464241" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp-hero">
+          <i class="bi bi-whatsapp"></i> Falar no WhatsApp
+        </a>
+      </div>
+    </div>
+    <div class="hero-image-col">
+      <div class="hero-image-badge">
+        <i class="bi bi-shield-check"></i>
+        <span>100%<br>Original</span>
+      </div>
+      <div class="hero-products-visual">
+        <div class="hero-circle-glow"></div>
+        <div class="hero-floating-icons">
+          <div class="hfi hfi-1"><i class="bi bi-droplet-fill"></i></div>
+          <div class="hfi hfi-2"><i class="bi bi-bag-heart-fill"></i></div>
+          <div class="hfi hfi-3"><i class="bi bi-watch"></i></div>
+          <div class="hfi hfi-4"><i class="bi bi-sunglasses"></i></div>
+        </div>
+        <div class="hero-center-icon"><i class="bi bi-stars"></i></div>
+      </div>
+    </div>
   </div>
-  <div class="hero-deco"></div>
+</section>
+
+<!-- ===== BARRA DIFERENCIAIS ===== -->
+<div class="features-bar">
+  <div class="container features-bar-inner">
+    <div class="features-bar-item">
+      <i class="bi bi-truck"></i>
+      <div>
+        <strong>Envio Rápido</strong>
+        <span>para Todo o Brasil</span>
+      </div>
+    </div>
+    <div class="features-bar-divider"></div>
+    <div class="features-bar-item">
+      <i class="bi bi-shield-check"></i>
+      <div>
+        <strong>Pagamento Seguro</strong>
+        <span>via Mercado Pago</span>
+      </div>
+    </div>
+    <div class="features-bar-divider"></div>
+    <div class="features-bar-item">
+      <i class="bi bi-emoji-smile"></i>
+      <div>
+        <strong>Satisfação Garantida</strong>
+        <span>Troca em até 7 dias</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== NOVIDADES / DESTAQUES ===== -->
+{% if featured %}
+<section class="section section-light">
+  <div class="container">
+    <div class="section-header section-header-dark">
+      <h2>NOVIDADES PARA VOCÊ</h2>
+      <p>Os produtos mais quentes da semana</p>
+    </div>
+    <div class="products-grid products-grid-light">
+      {% for product in featured %}
+        {% include "shop/_product_card_light.html" %}
+      {% endfor %}
+    </div>
+    <div class="text-center mt-4">
+      <a href="{{ url_for('main.catalog') }}" class="btn btn-gold-outline-dark">Ver todos os produtos</a>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- ===== BARRA DE CONFIANÇA ===== -->
+<div class="trust-bar">
+  <div class="container trust-bar-inner">
+    <div class="trust-item">
+      <i class="bi bi-shield-fill-check"></i>
+      <div>
+        <strong>Site <span class="gold-text">100%</span> Seguro</strong>
+      </div>
+    </div>
+    <div class="trust-divider"></div>
+    <div class="trust-item">
+      <i class="bi bi-headset"></i>
+      <div>
+        <strong>Suporte Rápido</strong>
+        <span>(13) 99746-4241</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== DEPOIMENTOS ===== -->
+<section class="section testimonials-section">
+  <div class="container">
+    <div class="section-header section-header-dark">
+      <h2>O QUE NOSSOS CLIENTES DIZEM</h2>
+      <p>A experiência de quem já comprou com a gente</p>
+    </div>
+
+    <div class="testimonials-wrapper">
+      <!-- Depoimento fixo / exemplo -->
+      <div class="testimonial-card">
+        <div class="testimonial-avatar">
+          <div class="testimonial-avatar-circle">A</div>
+        </div>
+        <div class="testimonial-content">
+          <i class="bi bi-quote testimonial-quote"></i>
+          <p class="testimonial-text">Adorei a experiência! Produtos de ótima qualidade e entrega super rápida. Recomendo demais!</p>
+          <div class="testimonial-stars">
+            <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+          </div>
+          <span class="testimonial-author">— Ana Souza</span>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-avatar">
+          <div class="testimonial-avatar-circle">C</div>
+        </div>
+        <div class="testimonial-content">
+          <i class="bi bi-quote testimonial-quote"></i>
+          <p class="testimonial-text">Perfume chegou lacrado, embalagem impecável. Com certeza vou comprar mais vezes!</p>
+          <div class="testimonial-stars">
+            <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+          </div>
+          <span class="testimonial-author">— Carlos M.</span>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-avatar">
+          <div class="testimonial-avatar-circle">J</div>
+        </div>
+        <div class="testimonial-content">
+          <i class="bi bi-quote testimonial-quote"></i>
+          <p class="testimonial-text">Melhor loja de importados que conheço. Preço justo e atendimento excelente!</p>
+          <div class="testimonial-stars">
+            <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i>
+          </div>
+          <span class="testimonial-author">— Julia F.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center mt-4">
+      <a href="{{ url_for('reviews.index') }}" class="btn btn-gold-outline-dark">
+        <i class="bi bi-star-fill"></i> Ver todas as avaliações
+      </a>
+    </div>
+  </div>
 </section>
 
 <!-- ===== CATEGORIAS ===== -->
 {% if categories %}
-<section class="section">
+<section class="section section-dark-alt">
   <div class="container">
     <div class="section-header">
       <h2>Nossas Categorias</h2>
-      <p>Encontre o perfume perfeito para cada ocasião</p>
+      <p>Encontre o produto perfeito para cada ocasião</p>
     </div>
     <div class="categories-grid">
       {% for cat in categories %}
@@ -38,52 +193,5 @@
 </section>
 {% endif %}
 
-<!-- ===== DESTAQUES ===== -->
-{% if featured %}
-<section class="section section-dark">
-  <div class="container">
-    <div class="section-header">
-      <h2>Destaques</h2>
-      <p>Os favoritos dos nossos clientes</p>
-    </div>
-    <div class="products-grid">
-      {% for product in featured %}
-        {% include "shop/_product_card.html" %}
-      {% endfor %}
-    </div>
-    <div class="text-center mt-4">
-      <a href="{{ url_for('main.catalog') }}" class="btn btn-outline-gold">Ver todos os produtos</a>
-    </div>
-  </div>
-</section>
-{% endif %}
-
-<!-- ===== DIFERENCIAIS ===== -->
-<section class="section">
-  <div class="container">
-    <div class="features-grid">
-      <div class="feature-card">
-        <i class="bi bi-shield-check"></i>
-        <h3>100% Originais</h3>
-        <p>Todos os produtos são importados com certificado de autenticidade.</p>
-      </div>
-      <div class="feature-card">
-        <i class="bi bi-truck"></i>
-        <h3>Entrega Rápida</h3>
-        <p>Enviamos para todo o Brasil com embalagem premium.</p>
-      </div>
-      <div class="feature-card">
-        <i class="bi bi-arrow-return-left"></i>
-        <h3>Troca Garantida</h3>
-        <p>Até 7 dias para troca ou devolução sem complicação.</p>
-      </div>
-      <div class="feature-card">
-        <i class="bi bi-lock"></i>
-        <h3>Pagamento Seguro</h3>
-        <p>Compra 100% segura via Mercado Pago.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
 {% endblock %}
+
