@@ -67,26 +67,6 @@
   </div>
 </div>
 
-<!-- ===== NOVIDADES / DESTAQUES ===== -->
-{% if featured %}
-<section class="section section-light">
-  <div class="container">
-    <div class="section-header section-header-dark">
-      <h2>NOVIDADES PARA VOCÊ</h2>
-      <p>Os produtos mais quentes da semana</p>
-    </div>
-    <div class="products-grid products-grid-light">
-      {% for product in featured %}
-        {% include "shop/_product_card_light.html" %}
-      {% endfor %}
-    </div>
-    <div class="text-center mt-4">
-      <a href="{{ url_for('main.catalog') }}" class="btn btn-gold-outline-dark">Ver todos os produtos</a>
-    </div>
-  </div>
-</section>
-{% endif %}
-
 <!-- ===== BARRA DE CONFIANÇA ===== -->
 <div class="trust-bar">
   <div class="container trust-bar-inner">
@@ -106,68 +86,6 @@
     </div>
   </div>
 </div>
-
-<!-- ===== DEPOIMENTOS ===== -->
-<section class="section testimonials-section">
-  <div class="container">
-    <div class="section-header section-header-dark">
-      <h2>O QUE NOSSOS CLIENTES DIZEM</h2>
-      <p>A experiência de quem já comprou com a gente</p>
-    </div>
-
-    <div class="testimonials-wrapper">
-      <!-- Depoimento fixo / exemplo -->
-      <div class="testimonial-card">
-        <div class="testimonial-avatar">
-          <div class="testimonial-avatar-circle">A</div>
-        </div>
-        <div class="testimonial-content">
-          <i class="bi bi-quote testimonial-quote"></i>
-          <p class="testimonial-text">Adorei a experiência! Produtos de ótima qualidade e entrega super rápida. Recomendo demais!</p>
-          <div class="testimonial-stars">
-            <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-            <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-          </div>
-          <span class="testimonial-author">— Ana Souza</span>
-        </div>
-      </div>
-      <div class="testimonial-card">
-        <div class="testimonial-avatar">
-          <div class="testimonial-avatar-circle">C</div>
-        </div>
-        <div class="testimonial-content">
-          <i class="bi bi-quote testimonial-quote"></i>
-          <p class="testimonial-text">Perfume chegou lacrado, embalagem impecável. Com certeza vou comprar mais vezes!</p>
-          <div class="testimonial-stars">
-            <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-            <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-          </div>
-          <span class="testimonial-author">— Carlos M.</span>
-        </div>
-      </div>
-      <div class="testimonial-card">
-        <div class="testimonial-avatar">
-          <div class="testimonial-avatar-circle">J</div>
-        </div>
-        <div class="testimonial-content">
-          <i class="bi bi-quote testimonial-quote"></i>
-          <p class="testimonial-text">Melhor loja de importados que conheço. Preço justo e atendimento excelente!</p>
-          <div class="testimonial-stars">
-            <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-            <i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i>
-          </div>
-          <span class="testimonial-author">— Julia F.</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="text-center mt-4">
-      <a href="{{ url_for('reviews.index') }}" class="btn btn-gold-outline-dark">
-        <i class="bi bi-star-fill"></i> Ver todas as avaliações
-      </a>
-    </div>
-  </div>
-</section>
 
 <!-- ===== CATEGORIAS ===== -->
 {% if categories %}
