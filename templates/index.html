@@ -38,6 +38,30 @@
   </div>
 </section>
 
+<!-- ===== CATEGORIAS ===== -->
+{% if categories %}
+<section class="section section-dark-alt">
+  <div class="container">
+    <div class="section-header">
+      <h2>Nossas Categorias</h2>
+      <p>Encontre o produto perfeito para cada ocasião</p>
+    </div>
+    <div class="categories-grid">
+      {% for cat in categories %}
+      <a href="{{ url_for('main.catalog', categoria=cat.slug) }}" class="cat-card">
+        {% if cat.image %}
+          <img src="{{ url_for('static', filename='uploads/' ~ cat.image) }}" alt="{{ cat.name }}" />
+        {% else %}
+          <div class="cat-card-placeholder"><i class="bi bi-droplet-fill"></i></div>
+        {% endif %}
+        <span>{{ cat.name }}</span>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
 <!-- ===== BARRA DIFERENCIAIS ===== -->
 <div class="features-bar">
   <div class="container features-bar-inner">
@@ -86,30 +110,6 @@
     </div>
   </div>
 </div>
-
-<!-- ===== CATEGORIAS ===== -->
-{% if categories %}
-<section class="section section-dark-alt">
-  <div class="container">
-    <div class="section-header">
-      <h2>Nossas Categorias</h2>
-      <p>Encontre o produto perfeito para cada ocasião</p>
-    </div>
-    <div class="categories-grid">
-      {% for cat in categories %}
-      <a href="{{ url_for('main.catalog', categoria=cat.slug) }}" class="cat-card">
-        {% if cat.image %}
-          <img src="{{ url_for('static', filename='uploads/' ~ cat.image) }}" alt="{{ cat.name }}" />
-        {% else %}
-          <div class="cat-card-placeholder"><i class="bi bi-droplet-fill"></i></div>
-        {% endif %}
-        <span>{{ cat.name }}</span>
-      </a>
-      {% endfor %}
-    </div>
-  </div>
-</section>
-{% endif %}
 
 {% endblock %}
 
