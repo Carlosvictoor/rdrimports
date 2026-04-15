@@ -746,6 +746,16 @@ h1, h2, h3 { font-family: 'Cormorant Garamond', serif; font-weight: 600; letter-
   margin-top: 2px;
 }
 .trust-phone:hover { color: #1db954; text-decoration: underline; }
+.trust-instagram {
+  display: block;
+  color: #e1306c;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: 'Raleway', sans-serif;
+  text-decoration: none;
+  margin-top: 2px;
+}
+.trust-instagram:hover { color: #c13584; text-decoration: underline; }
 .gold-text { color: var(--gold); }
 .trust-divider {
   width: 1px; height: 50px;
